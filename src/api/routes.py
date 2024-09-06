@@ -154,6 +154,18 @@ def get_patient_by_id(id):
     return jsonify(current_patient.serialize()), 200
 
 
+# get patients
+@api.route("/patients", methods=["GET"])
+def get_patients():
+    patients = Patient.query.all()
+    # serialized_pacient = [patients.serialize() for patient in patients]
+    serialized_pacient = []
+    for patient in patients:
+        serialized_pacient.append(patient.serialize())
+
+    return jsonify({"patienst": serialized_pacient}), 200
+
+
 # create a patient
 @api.route("/patient", methods=["POST"])
 def create_patient():
@@ -265,7 +277,8 @@ def delete_patient_by_id(id):
         db.session.rollback()
         return error, 500
 
-    ##########################CRUD APPOINTMENT#########################################
+
+##########################CRUD APPOINTMENT#########################################
 
 
 # get appointment by id
@@ -275,6 +288,30 @@ def get_appointment_by_id(id):
     if not current_appointment:
         return jsonify({"error": "appointment not found"}), 404
     return jsonify(current_appointment.serialize()), 200
+
+
+# get all appointments
+@api.route("/appointments", methods=["GET"])
+def get_appointments():
+    appointments = Appointment.query.all()
+    # serialized_appointment = [appointment.serialize() for appointment in appointments]
+    serialized_appointment = []
+    for appointment in appointments:
+        serialized_appointment.append(appointment.serialize())
+    return jsonify({"appointment": serialized_appointment}), 200
+
+
+# get appointment by status
+@api.route("/appointment/status", methods=["POST"])
+def get_appointments_status():
+    data = request.get_json()
+    status = data.get("confirmation", None)
+    appointments = Appointment.query.filter_by(confirmation=status).all()
+    # serialized_appointment = [appointment.serialize() for appointment in current_appointment]
+    serialized_appointment = []
+    for appointment in appointments:
+        serialized_appointment.append(appointment.serialize())
+    return jsonify({"appointment": serialized_appointment}), 200
 
 
 # create a appointment
@@ -305,7 +342,7 @@ def create_appointment(id_doctor, id_patient):
         return jsonify(error.args), 500
 
 
-# edict a appointment
+# edit a appointment
 @api.route("/appointment/<int:id>", methods=["PUT"])
 def edit_appointment(id):
     data = request.get_json()
@@ -360,10 +397,19 @@ def delete_appointment_by_id(id):
 # get record by id
 @api.route("/record/<int:id>", methods=["GET"])
 def get_record_by_id(id):
-    current_record = Record.query.get(id)
-    if not current_record:
+    record = Record.query.get(id)
+    if not record:
         return jsonify({"error": "record not found"}), 404
-    return jsonify(current_record.serialize()), 200
+    return jsonify(record.serialize()), 200
+
+
+# get record by id_patient
+@api.route("/record/patient/<int:id_patient>", methods=["GET"])
+def get_record_by_id_patient(id_patient):
+    record = Record.query.get(id_patient)
+    if not record:
+        return jsonify({"error": "record not found"}), 404
+    return jsonify(record.serialize()), 200
 
 
 # create a record

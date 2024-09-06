@@ -51,7 +51,7 @@ class Patient(db.Model):
     name = db.Column(db.String(120), unique=False, nullable=False)
     dni = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
+    password = db.Column(db.String(300), unique=False, nullable=False)
     city = db.Column(db.String(50), unique=False, nullable=False)
     country = db.Column(db.String(40), unique=False, nullable=False)
     age = db.Column(db.Integer, unique=False, nullable=False)
