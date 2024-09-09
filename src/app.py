@@ -14,6 +14,9 @@ from api.commands import setup_commands
 
 # from models import Person
 
+# JWT TOKEN
+from flask_jwt_extended import JWTManager
+
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "../public/"
@@ -33,7 +36,10 @@ else:
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
+app.config["JWT_SECRET_KEY"] = os.environ.get("FLASK_APP_KEY")
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 86400
 
+jwt = JWTManager(app)
 # add the admin
 setup_admin(app)
 

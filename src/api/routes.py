@@ -5,6 +5,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Doctor, Patient, Appointment, Record
 from api.utils import generate_sitemap, APIException
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_cors import CORS
@@ -27,6 +28,37 @@ def handle_hello():
 
 
 # aqui cominezas mis rutas
+# login doctor
+# validamos al usuario y le asignamos un token
+@api.route("/login/doctor", methods=["POST"])
+def doctor_login():
+
+    data = request.get_json()
+    email = data.get("email", None)
+    password = data.get("password", None)
+    # Reserva.query.filter_by(fecha=fecha, time=time, id_place=id).first()
+    # validamos que el usario exista
+    doctor_exist = Doctor.query.filter_by(email=email).first()
+    patient_exist = Patient.query.filter_by(email=email).first()
+    if not doctor_exist:
+        if not patient_exist:
+            return jsonify({"error": "User not found"}), 404
+        else:
+            user_exit = patient_exist
+            type_user = "patient"
+    else:
+        user_exit = doctor_exist
+        type_user = "doctor"
+
+    # obtenemos el password y lo comparamos
+    password_check = check_password_hash(user_exit.password, password)
+    if not password_check:
+        return jsonify({"error": "Password incorrecto"}), 401
+
+    # se crea el token
+    token_data = {"id": user_exit.id, "email": user_exit.email, "type": type_user}
+    token = create_access_token(token_data)
+    return jsonify({"token": token}), 200
 
 
 ##########################CRUD DOCTOR#########################################
@@ -82,6 +114,7 @@ def create_doctor():
 
 # edict a doctor
 @api.route("/doctor/<int:id>", methods=["PUT"])
+@jwt_required()
 def edit_doctor(id):
     data = request.get_json()
     name = data.get("name", None)
@@ -93,7 +126,6 @@ def edit_doctor(id):
     number = data.get("number", None)
 
     # validamos que el doctor no exista
-
     doctor_exist = Doctor.query.filter_by(id=id).first()
     if not doctor_exist:
         return jsonify({"error": "Doctor not exist"}), 404
@@ -110,6 +142,7 @@ def edit_doctor(id):
         if not update_doctor:
             return jsonify({"error": "doctor not found"}), 404
 
+        update_doctor.name = name
         update_doctor.password = password
         update_doctor.email = email
         update_doctor.password = (password,)
@@ -129,7 +162,6 @@ def edit_doctor(id):
 @api.route("/doctor/<int:id>", methods=["DELETE"])
 def delete_doctor_by_id(id):
     doctor_to_delete = Doctor.query.get(id)
-
     if not doctor_to_delete:
         return jsonify({"error": "user not found"}), 404
 
@@ -142,28 +174,35 @@ def delete_doctor_by_id(id):
         db.session.rollback()
         return error, 500
 
-    ##########################CRUD PATIENT#########################################
+
+##########################CRUD PATIENT#########################################
 
 
 # get patient by id
 @api.route("/patient/<int:id>", methods=["GET"])
+@jwt_required()
 def get_patient_by_id(id):
-    current_patient = Patient.query.get(id)
-    if not current_patient:
-        return jsonify({"error": "patient not found"}), 404
-    return jsonify(current_patient.serialize()), 200
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        current_patient = Patient.query.get(id)
+        if not current_patient:
+            return jsonify({"error": "patient not found"}), 404
+        return jsonify(current_patient.serialize()), 200
+    else:
+        return jsonify({"error": "this user is not a doctor"}), 404
 
 
 # get patients
 @api.route("/patients", methods=["GET"])
+@jwt_required()
 def get_patients():
     patients = Patient.query.all()
+    return jsonify({"patienst": [patient.serialize() for patient in patients]}), 200
     # serialized_pacient = [patients.serialize() for patient in patients]
-    serialized_pacient = []
-    for patient in patients:
-        serialized_pacient.append(patient.serialize())
-
-    return jsonify({"patienst": serialized_pacient}), 200
+    # serialized_pacient = []
+    # for patient in patients:
+    #    serialized_pacient.append(patient.serialize())
+    # return jsonify({"patienst": serialized_pacient}), 200
 
 
 # create a patient
@@ -213,6 +252,7 @@ def create_patient():
 
 # edit a patient
 @api.route("/patient/<int:id>", methods=["PUT"])
+@jwt_required()
 def edit_patient(id):
     data = request.get_json()
     name = data.get("name", None)
@@ -262,6 +302,7 @@ def edit_patient(id):
 
 # delete patient
 @api.route("/patient/<int:id>", methods=["DELETE"])
+@jwt_required()
 def delete_patient_by_id(id):
     patient_to_delete = Patient.query.get(id)
 
@@ -283,39 +324,76 @@ def delete_patient_by_id(id):
 
 # get appointment by id
 @api.route("/appointment/<int:id>", methods=["GET"])
+@jwt_required()
 def get_appointment_by_id(id):
-    current_appointment = Appointment.query.get(id)
-    if not current_appointment:
-        return jsonify({"error": "appointment not found"}), 404
-    return jsonify(current_appointment.serialize()), 200
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        current_appointment = Appointment.query.get(id)
+        if not current_appointment:
+            return jsonify({"error": "appointment not found"}), 404
+        return jsonify(current_appointment.serialize()), 200
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
 
 
 # get all appointments
 @api.route("/appointments", methods=["GET"])
+@jwt_required()
 def get_appointments():
-    appointments = Appointment.query.all()
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        appointments = Appointment.query.all()
+        return (
+            jsonify(
+                {
+                    "appointment": [
+                        appointment.serialize() for appointment in appointments
+                    ]
+                }
+            ),
+            200,
+        )
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
     # serialized_appointment = [appointment.serialize() for appointment in appointments]
-    serialized_appointment = []
-    for appointment in appointments:
-        serialized_appointment.append(appointment.serialize())
-    return jsonify({"appointment": serialized_appointment}), 200
+    # serialized_appointment = []
+    # for appointment in appointments:
+    #    serialized_appointment.append(appointment.serialize())
+    # return jsonify({"appointment": serialized_appointment}), 200
 
 
 # get appointment by status
 @api.route("/appointment/status", methods=["POST"])
+@jwt_required()
 def get_appointments_status():
     data = request.get_json()
-    status = data.get("confirmation", None)
-    appointments = Appointment.query.filter_by(confirmation=status).all()
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        status = data.get("confirmation", None)
+        appointments = Appointment.query.filter_by(confirmation=status).all()
+        return (
+            jsonify(
+                {
+                    "appointment": [
+                        appointment.serialize() for appointment in appointments
+                    ]
+                }
+            ),
+            200,
+        )
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
+
     # serialized_appointment = [appointment.serialize() for appointment in current_appointment]
-    serialized_appointment = []
-    for appointment in appointments:
-        serialized_appointment.append(appointment.serialize())
-    return jsonify({"appointment": serialized_appointment}), 200
+    # serialized_appointment = []
+    # for appointment in appointments:
+    #   serialized_appointment.append(appointment.serialize())
+    # return jsonify({"appointment": serialized_appointment}), 200
 
 
 # create a appointment
 @api.route("/appointment/<int:id_doctor>/<int:id_patient>", methods=["POST"])
+@jwt_required()
 def create_appointment(id_doctor, id_patient):
     data = request.get_json()
     date = data.get("date", None)
@@ -344,6 +422,7 @@ def create_appointment(id_doctor, id_patient):
 
 # edit a appointment
 @api.route("/appointment/<int:id>", methods=["PUT"])
+@jwt_required()
 def edit_appointment(id):
     data = request.get_json()
     date = data.get("date", None)
@@ -376,6 +455,7 @@ def edit_appointment(id):
 
 # delete appointment
 @api.route("/appointment/<int:id>", methods=["DELETE"])
+@jwt_required()
 def delete_appointment_by_id(id):
     appointment_to_delete = Appointment.query.get(id)
 
@@ -396,94 +476,120 @@ def delete_appointment_by_id(id):
 
 # get record by id
 @api.route("/record/<int:id>", methods=["GET"])
+@jwt_required()
 def get_record_by_id(id):
-    record = Record.query.get(id)
-    if not record:
-        return jsonify({"error": "record not found"}), 404
-    return jsonify(record.serialize()), 200
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        record = Record.query.get(id)
+        if not record:
+            return jsonify({"error": "record not found"}), 404
+
+        return jsonify(record.serialize()), 200
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
 
 
-# get record by id_patient
-@api.route("/record/patient/<int:id_patient>", methods=["GET"])
-def get_record_by_id_patient(id_patient):
-    record = Record.query.get(id_patient)
-    if not record:
-        return jsonify({"error": "record not found"}), 404
-    return jsonify(record.serialize()), 200
+# get record by appoitnment
+@api.route("/record/appointment/<int:id_appointment>", methods=["GET"])
+@jwt_required()
+def get_record_by_id_appointment(id_appointment):
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        record = Record.query.filter_by(id_appointment=id_appointment)
+        if not record:
+            return jsonify({"error": "record not found"}), 404
+        return jsonify(record.serialize()), 200
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
 
 
 # create a record
 @api.route("/record/<int:id_appointment>/", methods=["POST"])
+@jwt_required()
 def create_record(id_appointment):
-    data = request.get_json()
-    date = data.get("date", None)
-    diagnosis = data.get("diagnosis", None)
-    treatment = data.get("treatment", None)
-    recommendations = data.get("recommendations", None)
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        data = request.get_json()
+        date = data.get("date", None)
+        diagnosis = data.get("diagnosis", None)
+        treatment = data.get("treatment", None)
+        recommendations = data.get("recommendations", None)
 
-    try:
-        new_record = Record(
-            date=date,
-            diagnosis=diagnosis,
-            treatment=treatment,
-            recommendations=recommendations,
-            id_appointment=id_appointment,
-        )
-        db.session.add(new_record)
-        db.session.commit()
+        try:
+            new_record = Record(
+                date=date,
+                diagnosis=diagnosis,
+                treatment=treatment,
+                recommendations=recommendations,
+                id_appointment=id_appointment,
+            )
+            db.session.add(new_record)
+            db.session.commit()
 
-        return jsonify(new_record.serialize()), 201
+            return jsonify(new_record.serialize()), 201
 
-    except Exception as error:
-        db.session.rollback()
-        return jsonify(error.args), 500
+        except Exception as error:
+            db.session.rollback()
+            return jsonify(error.args), 500
+
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
 
 
 # edict a record
 @api.route("/record/<int:id>", methods=["PUT"])
+@jwt_required()
 def edit_record(id):
-    data = request.get_json()
-    date = data.get("date", None)
-    diagnosis = data.get("diagnosis", None)
-    treatment = data.get("treatment", None)
-    recommendations = data.get("recommendations", None)
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        data = request.get_json()
+        date = data.get("date", None)
+        diagnosis = data.get("diagnosis", None)
+        treatment = data.get("treatment", None)
+        recommendations = data.get("recommendations", None)
 
-    # validamos que el record no exista
-    record_exist = Record.query.filter_by(id=id).first()
-    if not record_exist:
-        return jsonify({"error": "record not exist"}), 404
+        # validamos que el record no exista
+        record_exist = Record.query.filter_by(id=id).first()
+        if not record_exist:
+            return jsonify({"error": "record not exist"}), 404
 
-    try:
-        update_record = Record.query.get(id)
-        if not update_record:
-            return jsonify({"error": "record not found"}), 404
+        try:
+            update_record = Record.query.get(id)
+            if not update_record:
+                return jsonify({"error": "record not found"}), 404
 
-        update_record.date = date
-        update_record.diagnosis = diagnosis
-        update_record.treatment = treatment
-        update_record.recommendations = recommendations
+            update_record.date = date
+            update_record.diagnosis = diagnosis
+            update_record.treatment = treatment
+            update_record.recommendations = recommendations
 
-        db.session.commit()
-        return jsonify({"record": update_record.serialize()}), 200
+            db.session.commit()
+            return jsonify({"record": update_record.serialize()}), 200
 
-    except Exception as error:
-        db.session.rollback()
-        return jsonify(error), 500
+        except Exception as error:
+            db.session.rollback()
+            return jsonify(error), 500
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
 
 
 # delete record
 @api.route("/record/<int:id>", methods=["DELETE"])
+@jwt_required()
 def delete_record_by_id(id):
-    record_to_delete = Record.query.get(id)
+    user = get_jwt_identity()
+    if user["type"] == "doctor":
+        record_to_delete = Record.query.get(id)
+        if not record_to_delete:
+            return jsonify({"error": "record not found"}), 404
 
-    if not record_to_delete:
-        return jsonify({"error": "record not found"}), 404
+        try:
+            db.session.delete(record_to_delete)
+            db.session.commit()
+            return jsonify("record deleted successfully"), 200
 
-    try:
-        db.session.delete(record_to_delete)
-        db.session.commit()
-        return jsonify("record deleted successfully"), 200
-
-    except Exception as error:
-        db.session.rollback()
-        return error, 500
+        except Exception as error:
+            db.session.rollback()
+            return error, 500
+    else:
+        return jsonify({"error": "this useris not a doctor"}), 404
