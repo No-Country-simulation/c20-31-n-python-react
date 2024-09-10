@@ -30,7 +30,7 @@ def handle_hello():
 # aqui cominezas mis rutas
 # login doctor
 # validamos al usuario y le asignamos un token
-@api.route("/login/doctor", methods=["POST"])
+@api.route("/login", methods=["POST"])
 def doctor_login():
 
     data = request.get_json()
@@ -58,7 +58,7 @@ def doctor_login():
     # se crea el token
     token_data = {"id": user_exit.id, "email": user_exit.email, "type": type_user}
     token = create_access_token(token_data)
-    return jsonify({"token": token}), 200
+    return jsonify({"token": token, "type": type_user}), 200
 
 
 ##########################CRUD DOCTOR#########################################
