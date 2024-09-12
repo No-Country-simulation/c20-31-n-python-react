@@ -23,7 +23,7 @@ services:
   region: ohio
   buildCommand: ./render_build.sh
   startCommand: gunicorn wsgi --chdir ./src/
-version: "1"
+
 
 
 # Exported from Render on 2024-09-11T02:52:36Z
