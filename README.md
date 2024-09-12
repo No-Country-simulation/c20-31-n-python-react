@@ -1,78 +1,63 @@
-# WebApp boilerplate with React JS and Flask API
+<a href="https://www.breatheco.de"><img height="280" align="right" src="https://github.com/4GeeksAcademy/flask-rest-hello/blob/main/docs/assets/badge.png?raw=true"></a>
 
-Build web applications using React.js for the front end and python/flask for your backend API...
+# Flask Boilerplate for Junior Developers
 
-- Documentation can be found here: https://start.4geeksacademy.com/starters/react-flask
-- Here is a video on [how to use this template](https://www.loom.com/share/f37c6838b3f1496c95111e515e83dd9b)
+Create flask API's in minutes, [📹 watch the video tutorial](https://youtu.be/ORxQ-K3BzQA).
+
+- [Extensive documentation here](https://start.4geeksacademy.com).
 - Integrated with Pipenv for package managing.
-- Fast deployment to heroku [in just a few steps here](https://start.4geeksacademy.com/backend/deploy-heroku-posgres).
-- Use of .env file.
+- Fast deloyment to render.com or heroku with `$ pipenv run deploy`.
+- Use of `.env` file.
 - SQLAlchemy integration for database abstraction.
 
-### 1) Installation:
+## 1) Installation
 
-> If you use Github Codespaces (recommended) or Gitpod this template will already come with Python, Node and the Posgres Database installed. If you are working locally make sure to install Python 3.10, Node 
+This template installs itself in a few seconds if you open it for free with Codespaces (recommended) or Gitpod.
+Skip this installation steps and jump to step 2 if you decide to use any of those services.
 
-It is recomended to install the backend first, make sure you have Python 3.8, Pipenv and a database engine (Posgress recomended)
+> Important: The boiplerplate is made for python 3.10 but you can change the `python_version` on the Pipfile.
 
-1. Install the python packages: `$ pipenv install`
-2. Create a .env file based on the .env.example: `$ cp .env.example .env`
-3. Install your database engine and create your database, depending on your database you have to create a DATABASE_URL variable with one of the possible values, make sure you replace the valudes with your database information:
+The following steps are automatically runned withing gitpod, if you are doing a local installation you have to do them manually:
 
-| Engine    | DATABASE_URL                                        |
-| --------- | --------------------------------------------------- |
-| SQLite    | sqlite:////test.db                                  |
-| MySQL     | mysql://username:password@localhost:port/example    |
-| Postgress | postgres://username:password@localhost:5432/example |
-
-4. Migrate the migrations: `$ pipenv run migrate` (skip if you have not made changes to the models on the `./src/api/models.py`)
-5. Run the migrations: `$ pipenv run upgrade`
-6. Run the application: `$ pipenv run start`
+```sh
+pipenv install;
+psql -U root -c 'CREATE DATABASE example;'
+pipenv run init;
+pipenv run migrate;
+pipenv run upgrade;
+```
 
 > Note: Codespaces users can connect to psql by typing: `psql -h localhost -U gitpod example`
 
-### Undo a migration
+## 2) How to Start coding
 
-You are also able to undo a migration by running
+There is an example API working with an example database. All your application code should be written inside the `./src/` folder.
 
-```sh
-$ pipenv run downgrade
+- src/main.py (it's where your endpoints should be coded)
+- src/models.py (your database tables and serialization logic)
+- src/utils.py (some reusable classes and functions)
+- src/admin.py (add your models to the admin and manage your data easily)
+
+For a more detailed explanation, look for the tutorial inside the `docs` folder.
+
+## Remember to migrate every time you change your models
+
+You have to migrate and upgrade the migrations for every update you make to your models:
+
+```bash
+$ pipenv run migrate # (to make the migrations)
+$ pipenv run upgrade  # (to update your databse with the migrations)
 ```
 
-### Backend Populate Table Users
+## Check your API live
 
-To insert test users in the database execute the following command:
+1. Once you run the `pipenv run start` command your API will start running live and you can open it by clicking in the "ports" tab and then clicking "open browser".
 
-```sh
-$ flask insert-test-users 5
-```
+> ✋ If you are working on a coding cloud like [Codespaces](https://docs.github.com/en/codespaces/developing-in-codespaces/forwarding-ports-in-your-codespace#sharing-a-port) or [Gitpod](https://www.gitpod.io/docs/configure/workspaces/ports#configure-port-visibility) make sure that your forwared port is public.
 
-And you will see the following message:
+## Publish/Deploy your website!
 
-```
-  Creating test users
-  test_user1@test.com created.
-  test_user2@test.com created.
-  test_user3@test.com created.
-  test_user4@test.com created.
-  test_user5@test.com created.
-  Users created successfully!
-```
-
-### **Important note for the database and the data inside it**
-
-Every Github codespace environment will have **its own database**, so if you're working with more people eveyone will have a different database and different records inside it. This data **will be lost**, so don't spend too much time manually creating records for testing, instead, you can automate adding records to your database by editing ```commands.py``` file inside ```/src/api``` folder. Edit line 32 function ```insert_test_data``` to insert the data according to your model (use the function ```insert_test_users``` above as an example). Then, all you need to do is run ```pipenv run insert-test-data```.
-
-### Front-End Manual Installation:
-
--   Make sure you are using node version 14+ and that you have already successfully installed and runned the backend.
-
-1. Install the packages: `$ npm install`
-2. Start coding! start the webpack dev server `$ npm run start`
-
-## Publish your website!
-
-This boilerplate it's 100% read to deploy with Render.com and Heroku in a matter of minutes. Please read the [official documentation about it](https://start.4geeksacademy.com/deploy).
+This boilerplate it's 100% read to deploy with Render.com and Herkou in a matter of minutes. Please read the [official documentation about it](https://start.4geeksacademy.com/deploy).
 
 ### Contributors
 

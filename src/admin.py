@@ -1,7 +1,6 @@
-  
 import os
 from flask_admin import Admin
-from .models import db, User, Doctor, Patient, Record, Appointment
+from models import db, User,Doctor,Patient,Appointment,Record
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
