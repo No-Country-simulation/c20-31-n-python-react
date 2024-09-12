@@ -7,7 +7,7 @@ services:
 - type: web
   name: flask-rest-hello
   runtime: python
-  repo: https://github.com/perd007/api_telemedicina
+  repo: https://github.com/No-Country-simulation/c20-31-n-python-react.git
   plan: free
   envVars:
   - key: DATABASE_URL
