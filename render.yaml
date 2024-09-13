@@ -37,4 +37,4 @@ databases:
   - source: 0.0.0.0/0
     description: everywhere
   postgresMajorVersion: "15"
-version: "1"
+
