@@ -184,6 +184,7 @@ def edit_doctor(id):
 
 # delete doctor
 @app.route("/doctor/<int:id>", methods=["DELETE"])
+@jwt_required()
 def delete_doctor_by_id(id):
     doctor_to_delete = Doctor.query.get(id)
     if not doctor_to_delete:
@@ -218,7 +219,7 @@ def get_patient_by_id(id):
 
 # get patients
 @app.route("/patients", methods=["GET"])
-#@jwt_required()
+@jwt_required()
 def get_patients():
     patients = Patient.query.all()
     return jsonify({"patienst": [patient.serialize() for patient in patients]}), 200
@@ -307,6 +308,7 @@ def edit_patient(id):
         if not update_patient:
             return jsonify({"error": "patient not found"}), 404
 
+        update_patient.name = name
         update_patient.password = password
         update_patient.email = email
         update_patient.password = password
