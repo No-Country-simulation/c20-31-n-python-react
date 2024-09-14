@@ -90,6 +90,7 @@ JIRA:  https://gracielabadin.atlassian.net/jira/software/c/projects/TEL/boards/2
                                   -Pruebas funcionales
                                   -Pruebas de usabilidad
                                   -Pruebas de seguridad
+ 
   **No cubierto:**   
   -Pruebas de compatibilidad
 
