@@ -6,7 +6,7 @@ Creación de Aplicación de Telemedicina para control y seguimiento de pacientes
   **Team Leader** : Billy Campagnoli.
   **Colaboradores:** 
    -   Graciela Badin (Argentina). Rol: QA Tester. www.linkedin.com/in/graciela-badin
--   José Carlos Perdomo (Venezuela). Rol: Backend
+-   José Carlos Perdomo (Venezuela). Rol: Backend. https://www.linkedin.com/in/perd007/
 -   Sebastián Barrera (Colombia). Rol: Frontend. https://www.linkedin.com/in/sebastianbarrera-herrera
 -   Piero Fernando Ramírez Esteban (Perú) Rol: Frontend.
   
