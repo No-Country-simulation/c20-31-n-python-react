@@ -1,0 +1,31 @@
+.container_alternative {
+  display: flex;
+  height: 90%;
+  border-radius: 13px;
+  margin: 40px;
+  border: 2px solid rgb(1, 65, 65);
+  background-color: rgba(255, 255, 255, 0.959);
+  .container__alternative--info {
+    display: flex;
+    gap: 5px;
+    .calendar {
+      width: 50%;
+      border: 1px solid;
+    }
+    .recomendaciones {
+      width: 50%;
+      .recomendacion {
+        display: flex;
+        flex-direction: column;
+        text-align: start;
+      }
+    }
+  }
+  .btn_ircita {
+    padding: 15px 40px;
+    border-radius: 13px;
+    border: none;
+    color: white;
+    background-color: black;
+  }
+}

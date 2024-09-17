@@ -1,0 +1,36 @@
+.lista {
+  text-align: start;
+}
+.item_lista {
+  text-align: start;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.item_lista:hover {
+  cursor: pointer;
+  color: blue;
+}
+
+.info_cita-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: start;
+}
+
+.container_btns {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  button {
+    padding: 15px 40px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 12px;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: rgb(230, 82, 82);
+  }
+}

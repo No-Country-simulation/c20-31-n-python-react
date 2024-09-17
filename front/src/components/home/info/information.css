@@ -1,0 +1,21 @@
+.info_container {
+  padding: 5px 20px;
+  text-align: center;
+  display: flex;
+  background-color: #d9d9d9;
+  border-radius: 15px;
+  text-align: start;
+  height: max-content;
+  gap: 20px;
+  .title_info {
+    margin: 0px;
+    font-size: 22px;
+    text-align: center  ;
+  }
+  .info1{
+    text-align: center;
+  }
+  .info2{
+    text-align: center;
+  }
+}

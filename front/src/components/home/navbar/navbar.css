@@ -1,0 +1,18 @@
+.navbar {
+  display: flex;
+  justify-content: spacer;
+  background-color: grey;
+  padding: 5px 40px;
+  justify-content: space-between;
+  align-items: center;
+  .logo {
+    cursor: pointer;
+    font-size: 19px;
+    font-weight: bold;
+  }
+  .icon-navbar {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+  }
+}
