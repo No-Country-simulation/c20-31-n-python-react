@@ -186,4 +186,165 @@ Como paciente quiero poder enviar mis datos, motivo de consulta y antecedentes a
 **Criterios de aceptación**
 • Los pacientes completarán un formulario de registro donde conste su edad, número de documento, país, antecedentes (Ej: diabetes, hipertensión arterial, alergias, asma bronquial, cirugías previas) hábitos ( Ej. Tabaquismo, consumo de alcohol y drogas) y motivo actual de consulta.
 • El médico recibirá una notificación cuando se carguen nuevos datos.
+## Historia de usuario 7: Gestión de citas por usuario médico
+**Descripción**
+-   Como médico, quiero poder gestionar las citas de los pacientes y asignar turnos disponibles para las consultas virtuales.
+**Criterios de aceptación**
+-   El sistema debe poder asignar una cita médica cada vez que un paciente solicita una cita virtual
+    
+-   El médico debe poder reprogramar la cita virtual hay algún inconveniente imprevisto en el horario y fecha seleccionados por el paciente.
+
+# Historias de usuario para un desarrollador Frontend
+## Historia de usuario 8: Historial médico.
+**Descripción**
+Como médico, quiero poder acceder al formulario de datos y a la historia clínica de los pacientes, para poder conocer su estado de salud y realizar un seguimiento a través del tiempo.
+
+**Criterios de aceptación:**
+
+•El sistema debe permitir al médico seleccionar a un paciente de una lista desplegable o mediante una búsqueda por nombre, documento de identidad o código.
+
+•Los resultados de la búsqueda deben mostrar un listado claro y conciso de los pacientes, incluyendo al menos su nombre completo y número de documento de identidad.
+•Los resultados se pueden ordenar por nombre del paciente, de forma ascendente o descendente, o por número de documento, de mayor a menor o viceversa.
+
+•Se puede considerar implementar filtros adicionales como diagnóstico o fecha de evaluación
+
+•El médico debe poder descargar los resultados de la búsqueda en formato PDF, CSV o Excel.
+
+•La interfaz de búsqueda debe ser sencilla y fácil de usar, guiando al usuario en el proceso de búsqueda y visualización de los resultados.
+
+## Historia de usuario 9: Selección de cita por usuario paciente
+**Descripción**
+Como paciente, quiero poder obtener rápidamente una cita para consulta en línea, seleccionando fecha y horario.
+
+**Criterios de aceptación:**
+
+•  Se implementará un campo de búsqueda en la página principal asociado a Google Calendar.
+
+•Las fechas disponibles deben poder visualizarse fácilmente, distinguiéndose de las no disponibles
+    
+•  La selección será realizada haciendo click sobre la fecha elegida.
+
+•  Se desplegará una lista de horarios disponibles.
+
+## Historia de usuario 10: Notificación de reprogramación de cita.
+**Descripción**
+Como paciente, quiero recibir notificaciones cuando se reprograme una consulta virtual.
+
+**Criterios de aceptación:**
+
+•El sistema enviará notificaciones por correo electrónico y/o mediante una notificación en la aplicación.
+
+•Las notificaciones incluirán un enlace directo a la nueva fecha programada y enlace de reunión correspondiente.
+
+•El usuario podrá configurar las preferencias de notificación (frecuencia, tipo de notificación).
+
+## Historia de usuario 11: Visualización de citas programadas como usuario paciente.
+**Descripción**
+Como paciente, quiero poder visualizar mi calendario de citas virtuales de forma clara y sencilla, para poder organizar mis tiempos y programar nuevas citas en caso de necesidad.
+
+**Criterios de aceptación:**
+
+•El calendario se mostrará en un formato mensual, semanal o diario, según la preferencia del usuario.
+
+•Se incluirán todos los eventos relevantes (consulta 1° vez, nuevas consultas.) con su fecha correspondiente.
+
+•Cada evento se mostrará con un color distintivo para facilitar su identificación
+## Historia de usuario 12: Historial del paciente.
+**Descripción**
+Como médico, quiero poder visualizar un historial completo del paciente, incluyendo los estudios de laboratorio y diagnóstico por imágenes.
+**Criterios de aceptación:**
+
+•El sistema generará un informe detallado del estado de salud del paciente, que incluirá:
+
+-Estado actual, motivo de consulta, signos vitales, diagnóstico presuntivo
+
+-Resultados de estudios complementarios
+
+-Comentarios y observaciones del médico.
+
+-Indicaciones médicas y recetas entregadas.
+
+-El informe se podrá descargar o exportar en formato PDF.
+
+# Tablas de bases de datos
+
+## Tabla pacientes. Registro:
+-   Nombre : string
+    
+-   ID :number
+    
+-   Correo electrónico :string
+    
+-   Password :string
+    
+-   DNI  :string
+    
+-   Numero de teléfono :number
+    
+-   Edad :number
+    
+-   Género :string
+    
+-   País :string
+    
+-   Ciudad  :string
+    
+-   IsActive  :boolean
+- 
+**Tabla médico:**
+
+-   Nombre :string
+    
+-   ID-médico :number
+    
+-   ID :number
+    
+-   Género :string
+    
+-   Edad :string
+    
+-   DNI :string
+    
+-   Correo Electrónico :string
+    
+-   Password :string
+    
+-   Especialidad :string
+    
+-   Teléfono :number
+    
+-   IsActive :boolean
+    
+-   Matrícula - Certificación :number
+
+**Tabla de citas:**
+
+-   Motivo de consulta :string
+    
+-   Modo de cita :string
+    
+-   Fecha de cita :string
+    
+-   ID :string
+    
+-   ID-paciente :string
+    
+-   Confirmación :string 1pendiente, 2 confirmada, 3 realizada
+
+**Tabla historial médico:**
+
+-ID :number
+
+-ID-citas :string
+
+-Diagnóstico :string
+
+-Receta-médica :string
+
+-Fecha-consulta :date
+
+-Recomendaciones :string
+
+
+
 
