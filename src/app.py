@@ -361,6 +361,7 @@ def get_appointment_by_id(id):
         return jsonify({"error": "this useris not a doctor"}), 404
 
 
+
 # get all appointments
 @app.route("/appointments", methods=["GET"])
 @jwt_required()
@@ -370,11 +371,11 @@ def get_appointments():
         appointments = Appointment.query.all()
         return (
             jsonify(
-                {
-                    "appointment": [
+                
+                    [
                         appointment.serialize() for appointment in appointments
                     ]
-                }
+                
             ),
             200,
         )
@@ -415,6 +416,22 @@ def get_appointments_status():
     #   serialized_appointment.append(appointment.serialize())
     # return jsonify({"appointment": serialized_appointment}), 200
 
+
+
+
+##########################
+# get appointment by id patient
+@app.route("/appointment/patient/<int:id_patient>", methods=["GET"])
+@jwt_required()
+def get_appointment_by_id_patient(id_patient):
+        current_appointment = Appointment.query.filter_by(id_patient=id_patient).all()
+        if not current_appointment:
+            return jsonify({"error": "appointment not found"}), 404
+        #return jsonify(current_appointment.serialize()), 200
+        return jsonify({"appointments": [appointments.serialize() for appointments in  current_appointment]}), 200
+    
+    
+##################
 
 # create a appointment
 @app.route("/appointment/<int:id_doctor>/<int:id_patient>", methods=["POST"])
@@ -520,10 +537,10 @@ def get_record_by_id(id):
 def get_record_by_id_appointment(id_appointment):
     user = get_jwt_identity()
     if user["type"] == "doctor":
-        record = Record.query.filter_by(id_appointment=id_appointment)
-        if not record:
-            return jsonify({"error": "record not found"}), 404
-        return jsonify(record.serialize()), 200
+        records = Record.query.filter_by(id_appointment=id_appointment).all()
+        if not records:
+            return jsonify({"error": "records not found"}), 404
+        return jsonify({"patienst": [record.serialize() for record in records]}), 200
     else:
         return jsonify({"error": "this useris not a doctor"}), 404
 

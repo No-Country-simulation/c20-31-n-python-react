@@ -13,10 +13,10 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/home' element={<HomeUser />} />
+        <Route path='/home/:token' element={<HomeUser />} />
         <Route path='/citas' element={<AppointmentPage />} />
         <Route path='/homePatient' element={<HomeAlternative />} />
-        <Route path='/citasPendientes' element={<HomeAdmin />} />
+        <Route path='/citasPendientes/:token' element={<HomeAdmin />} />
         <Route path='/historial' element={<HistorialPage />} />
         <Route path='/formConsulta' element={<FormularioMedico />} />
         <Route path='/calendario' element={<Calendar />} />

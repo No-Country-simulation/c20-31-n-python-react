@@ -28,7 +28,7 @@ class Doctor(db.Model):
     registrationt = db.Column(db.String(200), unique=True, nullable=False)
     specialty = db.Column(db.String(30), unique=False, nullable=False)
     number = db.Column(db.Integer, unique=False, nullable=False)
-    appointment = db.relationship("Appointment", backref="doctor", lazy=True)
+   # appointment = db.relationship("Appointment", backref="doctor", lazy=True)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):

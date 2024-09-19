@@ -4,9 +4,13 @@ import './homePage.css';
 import Information from '../../components/home/info/Information';
 import { useNavigate } from 'react-router-dom';
 import BigCalendar from '../../components/calendar/BigCalendar';
+import { useParams } from "react-router-dom";
+
 
 const HomeUser = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  
   return (
     <section className='home_principal'>
       <header>

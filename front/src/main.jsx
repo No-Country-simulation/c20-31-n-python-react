@@ -4,7 +4,8 @@ import Router from './routes/Router';
 import './assets/reset.css';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Router />
-  </StrictMode>,
+
+    <StrictMode>
+      <Router />
+    </StrictMode>,
 );
