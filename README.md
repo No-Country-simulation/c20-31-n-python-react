@@ -31,6 +31,7 @@ Testing QA: Trello, Jira-X Ray. Postman
 
 [TELEMED.Planilla de Casos de Prueba.xlsx](https://docs.google.com/spreadsheets/d/1ULZZiVwTBq5yCK5hCn7LbGOp9x1dStdw/edit?usp=sharing&ouid=117827628371075344068&rtpof=true&sd=true)
 JIRA:  https://gracielabadin.atlassian.net/jira/software/c/projects/TEL/boards/2/backlog?epics=visible&atlOrigin=eyJpIjoiOWRjNTZkNjgxYjc3NGQ2NzgzMTg0YmRmMDM1ODMxY2EiLCJwIjoiaiJ9
+Video presentación Demo Day: https://drive.google.com/file/d/12j7x43Gui8_U-rrDihmDtl4au19TeKEm/view?usp=drive_link
 
 ## User stories
 ● Como paciente, quiero poder programar consultas virtuales con médicos para recibir atención médica sin salir de casa.
